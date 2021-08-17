@@ -16,8 +16,8 @@ class _VimeoExampleState extends State<VimeoExample> {
 
   initVimeo() async {
     var res = await Vimeo(
-      "545794130",
-      accessKey: "2c987e01f52ce513bbcec2164292b4d4",
+      "your video id",
+      accessKey: "your vimeo accessKey",
     ).auth;
 
     if (res is VimeoVideo) {
@@ -32,6 +32,17 @@ class _VimeoExampleState extends State<VimeoExample> {
     }
 
     return vimeoVideo;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller?.dispose(forceDispose: true);
   }
 
   @override
