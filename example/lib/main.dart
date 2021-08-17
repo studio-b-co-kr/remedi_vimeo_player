@@ -1,58 +1,58 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:remedi_vimeo_player/remedi_vimeo_player.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(VimeoExample());
 }
 
-class MyApp extends StatefulWidget {
+class VimeoExample extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _VimeoExampleState createState() => _VimeoExampleState();
 }
 
-class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+class _VimeoExampleState extends State<VimeoExample> {
+  VimeoVideo? vimeoVideo;
+  BetterPlayerController? controller;
 
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
+  initVimeo() async {
+    var res = await Vimeo(
+      "545794130",
+      accessKey: "2c987e01f52ce513bbcec2164292b4d4",
+    ).auth;
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await RemediVimeoPlayer.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+    if (res is VimeoVideo) {
+      vimeoVideo = res;
+      controller = BetterPlayerController(
+        BetterPlayerConfiguration(),
+        betterPlayerDataSource: BetterPlayerDataSource(
+          BetterPlayerDataSourceType.network,
+          vimeoVideo!.videoUrl.toString(),
+        ),
+      );
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    return vimeoVideo;
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
-      ),
+          appBar: AppBar(
+            title: const Text('Vimeo Player Example'),
+          ),
+          body: FutureBuilder<dynamic>(
+            future: initVimeo(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              return VimeoPlayer(
+                vimeoVideo: vimeoVideo!,
+                videoController: controller!,
+              );
+            },
+          )),
     );
   }
 }
