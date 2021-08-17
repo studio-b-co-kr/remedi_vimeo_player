@@ -19,3 +19,9 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
+.idea/libraries/Dart_SDK.xml
+.idea/libraries/Flutter_Plugins.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/remedi_vimeo_player.iml
+.idea/vcs.xml
