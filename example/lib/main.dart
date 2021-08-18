@@ -49,9 +49,16 @@ class _VimeoExampleState extends State<VimeoExample> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Vimeo Player Example'),
+          bottomNavigationBar: Container(
+            height: 48,
+            color: Colors.red,
+            alignment: Alignment.center,
+            child: Text(
+              'Vimeo Player Example',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
           ),
+          appBar: AppBar(toolbarHeight: 0),
           body: FutureBuilder<dynamic>(
             future: initVimeo(),
             builder: (context, snapshot) {
