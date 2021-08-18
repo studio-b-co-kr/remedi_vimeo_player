@@ -56,7 +56,19 @@ class _VimeoExampleState extends State<VimeoExample> {
             future: initVimeo(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return Container();
+                return Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade700)),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                            "An error occurred while retrieving video information."),
+                      ),
+                    ),
+                  ),
+                );
               }
               return VimeoPlayer(
                 vimeoVideo: vimeoVideo!,
