@@ -49,40 +49,45 @@ class _VimeoExampleState extends State<VimeoExample> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-          bottomNavigationBar: Container(
-            height: 48,
-            color: Colors.red,
-            alignment: Alignment.center,
-            child: Text(
-              'Vimeo Player Example',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ),
           appBar: AppBar(toolbarHeight: 0),
-          body: FutureBuilder<dynamic>(
-            future: initVimeo(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade700)),
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Container(
-                      child: Center(
-                        child: Text(
-                            "An error occurred while retrieving video information."),
+          body: Stack(alignment: Alignment.topCenter, children: [
+            FutureBuilder<dynamic>(
+              future: initVimeo(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade700)),
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Container(
+                        child: Center(
+                          child: Text(
+                              "An error occurred while retrieving video information."),
+                        ),
                       ),
                     ),
-                  ),
+                  );
+                }
+                return VimeoPlayer(
+                  vimeoVideo: vimeoVideo!,
+                  videoController: controller!,
                 );
-              }
-              return VimeoPlayer(
-                vimeoVideo: vimeoVideo!,
-                videoController: controller!,
-              );
-            },
-          )),
+              },
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 48,
+                color: Colors.red.withOpacity(0.3),
+                alignment: Alignment.center,
+                child: Text(
+                  'Vimeo Player Example',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            ),
+          ])),
     );
   }
 }
