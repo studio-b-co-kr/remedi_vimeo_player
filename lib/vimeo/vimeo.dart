@@ -13,12 +13,13 @@ class Vimeo {
 
 extension ExtensionVimeo on Vimeo {
   Future<dynamic> get auth async {
+    var res =
+        await AuthApiService().getVimeoData(accessKey: accessKey!, id: videoId);
+
     try {
-      var res = await AuthApiService()
-          .getVimeoData(accessKey: accessKey!, id: videoId);
       return VimeoVideo.fromJsonAuth(res as Map<String, dynamic>);
     } catch (e) {
-      throw Exception("");
+      return e;
     }
   }
 

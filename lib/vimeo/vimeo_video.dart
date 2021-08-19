@@ -1,3 +1,5 @@
+import 'package:remedi_vimeo_player/vimeo/vimeo_error.dart';
+
 class VimeoVideo {
   final bool liveEvent;
   int? width;
@@ -12,6 +14,10 @@ class VimeoVideo {
   });
 
   factory VimeoVideo.fromJsonAuth(Map<String, dynamic> json) {
+    if (json.keys.contains("error")) {
+      throw VimeoError.fromJsonMap(json);
+    }
+
     if (json['embed']?['badges']['live']['streaming'] ?? false) {
       return VimeoVideo(liveEvent: true, sources: []);
     }

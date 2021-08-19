@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remedi_vimeo_player/remedi_vimeo_player.dart';
+import 'package:remedi_vimeo_player/vimeo/vimeo_error.dart';
 
 void main() {
   runApp(VimeoExample());
@@ -14,11 +15,15 @@ class _VimeoExampleState extends State<VimeoExample> {
   VimeoVideo? vimeoVideo;
   BetterPlayerController? controller;
 
-  initVimeo() async {
+  Future<dynamic> initVimeo() async {
     var res = await Vimeo(
       "your video id",
       accessKey: "your vimeo accessKey",
     ).auth;
+
+    if (res is VimeoError) {
+      return res;
+    }
 
     if (res is VimeoVideo) {
       vimeoVideo = res;
@@ -56,19 +61,35 @@ class _VimeoExampleState extends State<VimeoExample> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade700)),
+                      child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: Container(
+                              child:
+                                  Center(child: CircularProgressIndicator()))));
+                }
+
+                if (snapshot.data is VimeoError) {
+                  return Container(
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey.shade700)),
                     child: AspectRatio(
                       aspectRatio: 16 / 9,
                       child: Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(16),
                         child: Center(
                           child: Text(
-                              "An error occurred while retrieving video information."),
+                            "An error occurred\nwhile retrieving video information.",
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     ),
                   );
                 }
+
                 return VimeoPlayer(
                   vimeoVideo: vimeoVideo!,
                   videoController: controller!,
