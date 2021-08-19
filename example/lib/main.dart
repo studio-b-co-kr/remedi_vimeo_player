@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:remedi_vimeo_player/remedi_vimeo_player.dart';
-import 'package:remedi_vimeo_player/vimeo/vimeo_error.dart';
 
 void main() {
   runApp(VimeoExample());
