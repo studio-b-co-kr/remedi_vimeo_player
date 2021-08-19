@@ -17,9 +17,10 @@ class _VimeoExampleState extends State<VimeoExample> {
 
   Future<dynamic> initVimeo() async {
     var res = await Vimeo(
-      "your video id",
+      "your vimeo video id",
+      // optional
       accessKey: "your vimeo accessKey",
-    ).auth;
+    ).vimeo;
 
     if (res is VimeoError) {
       return res;
@@ -81,7 +82,9 @@ class _VimeoExampleState extends State<VimeoExample> {
                         padding: EdgeInsets.all(16),
                         child: Center(
                           child: Text(
-                            "An error occurred\nwhile retrieving video information.",
+                            "${(snapshot.data as VimeoError).developerMessage}" +
+                                "\n${(snapshot.data as VimeoError).errorCode ?? ""}" +
+                                "\n\n${(snapshot.data as VimeoError).error}",
                             textAlign: TextAlign.center,
                           ),
                         ),

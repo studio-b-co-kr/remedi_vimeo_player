@@ -15,7 +15,7 @@ class VimeoVideo {
 
   factory VimeoVideo.fromJsonAuth(Map<String, dynamic> json) {
     if (json.keys.contains("error")) {
-      throw VimeoError.fromJsonMap(json);
+      throw VimeoError.fromJsonAuth(json);
     }
 
     if (json['embed']?['badges']['live']['streaming'] ?? false) {
@@ -46,6 +46,34 @@ class VimeoVideo {
       height: json['height'],
       sources: files,
     );
+  }
+
+  factory VimeoVideo.fromJsonNoneAuth(Map<String, dynamic> json) {
+    if (json.keys.contains("message")) {
+      throw VimeoError.fromJsonNoneAuth(json);
+    }
+
+    var files = List<_VimeoQualityFile?>.from(json['request']['files']
+            ['progressive']
+        .map<_VimeoQualityFile?>((element) {
+      return _VimeoQualityFile(
+        quality: element['quality'],
+        file: VimeoSource(
+          width: element['width'],
+          height: element['height'],
+          fps: element['fps'] is double
+              ? element['fps']
+              : (element['fps'] as int).toDouble(),
+          url: Uri.parse(element['url']),
+        ),
+      );
+    })).toList();
+
+    return VimeoVideo(
+        liveEvent: (json['video']['live_event'] as bool?) ?? false,
+        width: json['video']['width'],
+        height: json['video']['height'],
+        sources: files);
   }
 }
 
@@ -124,7 +152,7 @@ class _VimeoQualityFile {
   static const String quality720p = "720p";
   static const String quality540p = "540p";
   static const String quality360p = "360p";
-  static const String quality280p = "280p";
+  static const String quality240p = "240p";
 
   final String quality;
   final VimeoSource file;

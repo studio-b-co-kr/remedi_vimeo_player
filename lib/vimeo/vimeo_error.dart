@@ -13,12 +13,21 @@ class VimeoError extends Error {
     return "getting vimeo information failed";
   }
 
-  factory VimeoError.fromJsonMap(Map<String, dynamic> json) {
+  factory VimeoError.fromJsonAuth(Map<String, dynamic> json) {
     return VimeoError(
       error: json['error'],
       link: json['link'],
       developerMessage: json['developer_message'],
       errorCode: json['error_code'],
+    );
+  }
+
+  factory VimeoError.fromJsonNoneAuth(Map<String, dynamic> json) {
+    return VimeoError(
+      error: json['message'],
+      link: null,
+      developerMessage: json['title'],
+      errorCode: null,
     );
   }
 }
